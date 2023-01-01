@@ -1,0 +1,28 @@
+# coding:utf-8
+import requests
+import json
+
+def download(url, title):
+    dir = './' + title + '.jpg'
+    try:
+        pic = requests.get(url)
+        fp = open(dir, 'wb')
+        fp.write(pic.content)
+        fp.close()
+        print(title)
+    except requests.exceptions.ConnectionError:
+        print('图片无法下载')
+
+
+for num in range(0, 1000, 20):
+   
+    url = 'https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=%E7%94%B5%E5%BD%B1&start='\
+          + str(num)+'&genres=%E7%88%B1%E6%83%85'
+    print(url)
+    html = requests.get(url).text
+ 
+    res = json.loads(html, encoding='utf-8')
+    for result in res['data']:
+        cover = result['cover']
+        title = result['title']
+        download(cover, title)
